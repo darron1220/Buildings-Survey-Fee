@@ -8,14 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     "中華段": { file: "2833_Luzhu_Zhonghua_data.json", code: 2833 }
   };
 
-  // 修正此處路徑問題，明確使用相對路徑
   fetch('./district_data.json')
     .then(response => response.json())
     .then(data => {
-      // 載入行政區選項
-      const districtSelect = document.getElementById('district');
-      const sectionSelect = document.getElementById('section');
-
       for (const district in data) {
         const option = document.createElement('option');
         option.value = district;
@@ -49,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       buildingFields.style.display = 'none';
     }
   });
+});
 
   document.getElementById('land-form').addEventListener('submit', (event) => {
     event.preventDefault();
