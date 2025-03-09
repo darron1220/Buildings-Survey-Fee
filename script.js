@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(response => response.json())
       .then(data => {
         const landData = data.find(item => 
-          Number(item.地段) === mapping.code && Number(item.地號) === Number(landNumber));
+  Number(item.地段) === mapping.code && item.地號 === landNumber);
         if (!landData) {
           document.getElementById('result-text').innerHTML = "未找到該地號的資料";
           document.getElementById('result').style.display = "block";
