@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const caseTypeSelect = document.getElementById('case-type');
   const districtSelect = document.getElementById('district');
   const sectionSelect = document.getElementById('section');
+  const detailTypeSelect = document.getElementById('detail-type');
 
   const sectionMapping = {
     "新園段": { file: "2802_Luzhu_Xinyuan_data.json", code: 2802 },
@@ -91,25 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let totalFee = 0;
 
             if (caseType === '建物第一次測量') {
-              totalFee += feeStandard.費用明細.建物平面圖測量費.單價 * units;
-              totalFee += feeStandard.費用明細.建物測量轉繪費 * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["位置圖測量費"];
-              totalFee += feeStandard["費用明細"]["建物位置圖轉繪費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物平面圖轉繪費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物測量成果圖校對費"] * buildingNumbers;
-            } else if (caseType === '建物複丈') {
-              totalFee += feeStandard["費用明細"]["建物合併複丈費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物合併轉繪費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物分割複丈費"]["每單位面積費用"] * units;
-              totalFee += feeStandard["費用明細"]["建物分割複丈費"]["建物轉繪費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物部分滅失測量費"] * units;
-              totalFee += feeStandard["費用明細"]["建物部分滅失轉繪費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物基地號門牌號及全部滅失勘查費"] * buildingNumbers;
-            }
+              totalFee = feeStandard.費用明細.建物平面圖測量費.單價 * units +
+                        feeStandard.費用明細.建物測量轉繪費 * buildingNumbers +
+                        feeStandard["費用明細"]["位置圖測量費"] +
+                        feeStandard["費用明細"]["建物位置圖轉繪費"] * buildingNumbers +
+                        feeStandard["費用明細"]["建物平面圖轉繪費"] * buildingNumbers +
+                        feeStandard["費用明細"]["建物測量成果圖校對費"] * buildingNumbers;
 
-            if (hasDigitalFile === 'no') {
+            if (hasDigitalFile === 'no')
               totalFee += feeStandard["費用明細"]["數值化作業費"] * buildingNumbers;
-            }
 
             document.getElementById('result-text').innerHTML = `總費用：${totalFee}元`;
             document.getElementById('result').style.display = "block";
