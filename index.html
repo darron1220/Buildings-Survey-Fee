@@ -7,65 +7,82 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="container">
+  <div class="container">
     <h2>建物測量與複丈費用計算系統</h2>
     <form id="land-form">
+      <div>
         <label for="district">行政區：</label>
         <select id="district" required>
-            <option value="">請選擇行政區</option>
+          <option value="">請選擇行政區</option>
         </select>
+      </div>
 
+      <div>
         <label for="section">地段：</label>
         <select id="section" disabled required>
-            <option value="">請先選擇行政區</option>
+          <option value="">請先選擇行政區</option>
         </select>
+      </div>
 
+      <div>
         <label for="land-number">地號：</label>
-        <input type="text" id="land-number" placeholder="請輸入8位數地號，例如：02440000" required>
+        <input type="text" id="land-number" placeholder="請輸入8位數地號，例如：244-0要輸入02440000" maxlength="8" required>
+      </div>
 
+      <div>
         <label for="case-type">案件類型：</label>
         <select id="case-type" required>
-            <option value="">請選擇案件類型</option>
-            <option value="建物第一次測量">建物第一次測量</option>
-            <option value="建物複丈">建物複丈</option>
+          <option value="">請選擇案件類型</option>
+          <option value="建物第一次測量">建物第一次測量</option>
+          <option value="建物複丈">建物複丈</option>
         </select>
+      </div>
 
-        <div id="detail-fields" style="display:none;">
-            <label for="detail-type">詳細項目：</label>
-            <select id="detail-type" required>
-                <option value="">請選擇詳細項目</option>
-            </select>
+      <div id="detail-field" style="display:none;">
+        <label for="detail-type">詳細項目：</label>
+        <select id="detail-type" required>
+          <option value="">請選擇詳細項目</option>
+        </select>
+      </div>
 
-            <label for="building-numbers">建號數：</label>
-            <input type="number" id="building-numbers" placeholder="請輸入建號數" min="1" required>
+      <div>
+        <label for="building-numbers">建號數：</label>
+        <input type="number" id="building-numbers" placeholder="請輸入建號數" min="1" required>
+      </div>
 
-            <label for="has-digital-file">是否已檢附電子檔：</label>
-            <select id="has-digital-file">
-                <option value="yes">是</option>
-                <option value="no">否</option>
-            </select>
+      <div>
+        <label for="has-digital-file">是否已檢附電子檔：</label>
+        <select id="has-digital-file">
+          <option value="yes">是</option>
+          <option value="no">否</option>
+        </select>
+      </div>
 
-            <label for="need-investigation">是否需要基地號或門牌號勘查：</label>
-            <select id="need-investigation">
-                <option value="no">否</option>
-                <option value="yes">是</option>
-            </select>
+      <div>
+        <label for="need-investigation">是否需要基地號或門牌號勘查：</label>
+        <select id="need-investigation">
+          <option value="no">否</option>
+          <option value="yes">是</option>
+        </select>
+      </div>
 
-            <label for="need-loss-investigation">是否需要建物或特別建物各棟次之全部滅失勘查：</label>
-            <select id="need-loss-investigation">
-                <option value="no">否</option>
-                <option value="yes">是</option>
-            </select>
-        </div>
+      <div>
+        <label for="need-loss-investigation">是否需要建物或特別建物各棟次之全部滅失勘查：</label>
+        <select id="need-loss-investigation">
+          <option value="no">否</option>
+          <option value="yes">是</option>
+        </select>
+      </div>
 
-        <button type="submit">計算費用</button>
+      <button type="submit">計算費用</button>
     </form>
 
     <div id="result" style="display:none;">
-        <h3>計算結果：</h3>
-        <p id="result-text"></p>
+      <h3>計算結果：</h3>
+      <p id="result-text"></p>
     </div>
-</div>
-<script src="script.js"></script>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
