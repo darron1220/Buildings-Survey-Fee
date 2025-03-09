@@ -10,6 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
     "中華段": { file: "2833_Luzhu_Zhonghua_data.json", code: 2833 }
   };
 
+  fetch('district_data.json')
+    .then(response => response.json())
+    .then(data => {
+      for (const district in data) {
+        const option = document.createElement('option');
+        option.value = district;
+        option.textContent = district;
+        districtSelect.appendChild(option);
+      }
+
+      districtSelect.addEventListener('change', () => {
+        const selectedDistrict = districtSelect.value;
+        sectionSelect.innerHTML = '<option value="">請選擇地段</option>';
+        if (selectedDistrict) {
+          data[selectedDistrict].forEach(section => {
+            const option = document.createElement('option');
+            option.value = section;
+            option.textContent = section;
+            sectionSelect.appendChild(option);
+          });
+          sectionSelect.disabled = false;
+        } else {
+          sectionSelect.disabled = true;
+        }
+      }
+    });
+
   caseTypeSelect.addEventListener('change', () => {
     buildingFields.style.display = ['建物第一次測量', '建物複丈'].includes(caseTypeSelect.value) ? 'block' : 'none';
   });
