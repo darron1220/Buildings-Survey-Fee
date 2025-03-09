@@ -11,31 +11,36 @@
     <h1>建物測量與複丈費用計算系統</h1>
     <form id="land-form">
       <label for="district">行政區：</label>
-      <select id="district" name="district" required>
+      <select id="district" required>
         <option value="">請選擇行政區</option>
       </select>
 
       <label for="section">地段：</label>
-      <select id="section" name="section" required disabled>
+      <select id="section" required disabled>
         <option value="">請先選擇行政區</option>
       </select>
 
       <label for="land-number">地號：</label>
-      <input type="text" id="land-number" name="land-number" placeholder="請輸入地號" required>
+      <input type="text" id="land-number" placeholder="請輸入8位數地號" required>
 
       <label for="case-type">案件類型：</label>
-      <select id="case-type" name="case-type" required>
+      <select id="case-type" required>
         <option value="">請選擇案件類型</option>
         <option value="建物第一次測量">建物第一次測量</option>
         <option value="建物複丈">建物複丈</option>
       </select>
 
-      <div id="building-fields" style="display: none;">
+      <div id="building-fields" style="display:none;">
+        <label>細項類型：</label>
+        <select id="detail-type">
+          <!-- JavaScript 動態載入 -->
+        </select>
+
         <label for="building-numbers">建號數：</label>
-        <input type="number" id="building-numbers" name="building-numbers" min="1" placeholder="請輸入建號數" required>
+        <input type="number" id="building-numbers" min="1" value="1" required>
 
         <label for="has-digital-file">是否已檢附電子檔：</label>
-        <select id="has-digital-file" name="has-digital-file" required>
+        <select id="has-digital-file">
           <option value="yes">是</option>
           <option value="no">否</option>
         </select>
@@ -44,7 +49,7 @@
       <button type="submit">計算費用</button>
     </form>
 
-    <div id="result" style="display: none;">
+    <div id="result" style="display:none;">
       <h2>計算結果</h2>
       <p id="result-text"></p>
     </div>
