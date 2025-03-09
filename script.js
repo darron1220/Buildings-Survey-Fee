@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
       buildingFields.style.display = 'none';
     }
   });
-});
 
+  // 以下程式碼必須在DOMContentLoaded內
   document.getElementById('land-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
               totalFee += feeStandard["費用明細"]["建物合併轉繪費"] * buildingNumbers;
             }
 
-            if (document.getElementById('has-digital-file').value === 'no') {
+            if (hasDigitalFile === 'no') {
               totalFee += feeStandard["費用明細"]["數值化作業費"] * buildingNumbers;
             }
 
@@ -126,4 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('result-text').innerHTML = "資料讀取錯誤";
         document.getElementById('result').style.display = "block";
       });
+  });
 });
