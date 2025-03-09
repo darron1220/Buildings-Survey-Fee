@@ -1,60 +1,65 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>建物測量與複丈費用計算系統</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>建物測量與複丈費用計算系統</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
-    <h1>建物測量與複丈費用計算系統</h1>
-    <form id="land-form">
-      <label for="district">行政區：</label>
-      <select id="district" required>
-        <option value="">請選擇行政區</option>
-      </select>
+    <div class="container">
+        <h2>建物測量與複丈費用計算系統</h2>
+        <form id="land-form">
+            <label>行政區：</label>
+            <select id="district">
+                <option value="">請選擇行政區</option>
+            </select>
 
-      <label for="section">地段：</label>
-      <select id="section" required disabled>
-        <option value="">請先選擇行政區</option>
-      </select>
+            <label>地段：</label>
+            <select id="section" disabled>
+                <option value="">請先選擇行政區</option>
+            </select>
 
-      <label for="land-number">地號：</label>
-      <input type="text" id="land-number" placeholder="請輸入8位數地號" required>
+            <label>地號：</label>
+            <select id="land-number">
+                <option value="">請先選擇地段</option>
+            </select>
 
-      <label for="case-type">案件類型：</label>
-      <select id="case-type" required>
-        <option value="">請選擇案件類型</option>
-        <option value="建物第一次測量">建物第一次測量</option>
-        <option value="建物複丈">建物複丈</option>
-      </select>
+            <label>案件類型：</label>
+            <select id="case-type">
+                <option value="">請選擇案件類型</option>
+                <option value="建物第一次測量">建物第一次測量</option>
+                <option value="建物複丈">建物複丈</option>
+            </select>
 
-      <div id="building-fields" style="display:none;">
-        <label>細項類型：</label>
-        <select id="detail-type">
-          <!-- JavaScript 動態載入 -->
-        </select>
+            <div id="building-fields" style="display:none;">
+                <label>詳細類型：</label>
+                <select id="detail-type">
+                    <option value="">請選擇詳細項目</option>
+                </select>
 
-        <label for="building-numbers">建號數：</label>
-        <input type="number" id="building-numbers" min="1" value="1" required>
+                <label>建號數：</label>
+                <input type="number" id="building-numbers" placeholder="請輸入建號數量" min="1">
 
-        <label for="has-digital-file">是否已檢附電子檔：</label>
-        <select id="has-digital-file">
-          <option value="yes">是</option>
-          <option value="no">否</option>
-        </select>
-      </div>
+                <label>是否已檢附電子檔：</label>
+                <select id="has-digital-file">
+                    <option value="yes">是</option>
+                    <option value="no">否</option>
+                </select>
+                
+                <label>是否需要建物基地號/門牌號及全部滅失勘查：</label>
+                <select id="need-investigation">
+                    <option value="no">否</option>
+                    <option value="yes">是</option>
+                </select>
 
-      <button type="submit">計算費用</button>
-    </form>
-
-    <div id="result" style="display:none;">
-      <h2>計算結果</h2>
-      <p id="result-text"></p>
+            <button type="submit">計算費用</button>
+        </form>
+        <div id="result" style="display:none;">
+            <h3>計算結果</h3>
+            <p id="result-text"></p>
+        </div>
     </div>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
