@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>土地規費計算系統</title>
+  <title>建物測量與複丈費用計算系統</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>土地規費計算系統</h1>
+    <h1>建物測量與複丈費用計算系統</h1>
     <form id="land-form">
       <label for="district">行政區：</label>
       <select id="district" name="district" required>
@@ -26,18 +26,11 @@
       <label for="case-type">案件類型：</label>
       <select id="case-type" name="case-type" required>
         <option value="">請選擇案件類型</option>
-        
-    <option value="建物第一次測量">建物第一次測量</option>
-    <option value="建物複丈">建物複丈</option>
-    
-        <option value="分割案件">分割案件</option>
+        <option value="建物第一次測量">建物第一次測量</option>
+        <option value="建物複丈">建物複丈</option>
       </select>
 
-      <!-- 當選擇分割案件時，顯示額外的欄位 -->
       <div id="building-fields" style="display: none;">
-        <label for="building-units">建物面積單位數(每單位50平方公尺)：</label>
-        <input type="number" id="building-units" name="building-units" min="1" placeholder="請輸入面積單位數" required>
-
         <label for="building-numbers">建號數：</label>
         <input type="number" id="building-numbers" name="building-numbers" min="1" placeholder="請輸入建號數" required>
 
@@ -47,21 +40,16 @@
           <option value="no">否</option>
         </select>
       </div>
-        <label for="partition-lines">分割線段數：</label>
-        <input type="number" id="partition-lines" name="partition-lines" min="0" placeholder="請輸入分割線段數">
-        
-        <label for="confirmation-points">確定界址點數：</label>
-        <input type="number" id="confirmation-points" name="confirmation-points" min="0" placeholder="請輸入確定界址點數">
-      </div>
 
-      <button type="submit">查詢</button>
+      <button type="submit">計算費用</button>
     </form>
 
     <div id="result" style="display: none;">
-      <h2>查詢結果</h2>
+      <h2>計算結果</h2>
       <p id="result-text"></p>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
