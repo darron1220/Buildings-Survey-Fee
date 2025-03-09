@@ -45,12 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 以下程式碼必須在DOMContentLoaded內
   document.getElementById('land-form').addEventListener('submit', (event) => {
     event.preventDefault();
 
-    const district = document.getElementById('district').value;
-    const section = document.getElementById('section').value;
+    const district = districtSelect.value;
+    const section = sectionSelect.value;
     const landNumber = document.getElementById('land-number').value.trim();
     const caseType = caseTypeSelect.value;
     const buildingNumbers = Number(document.getElementById('building-numbers').value) || 0;
@@ -72,23 +71,22 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`./${mapping.file}`)
       .then(response => response.json())
       .then(data => {
-        const landData = data.find(item => Number(item.地段) === mapping.code && Number(item.地號) === Number(landNumber));
+        const landData = data.find(item => 
+          Number(item.地段) === mapping.code && Number(item.地號) === Number(landNumber));
         if (!landData) {
           document.getElementById('result-text').innerHTML = "未找到該地號的資料";
           document.getElementById('result').style.display = "block";
           return;
         }
 
-        const area = landData.登記面積 || landData.面積;
+        const area = Number(landData.登記面積 || landData.面積);
         const units = Math.ceil(area / 50); // 每單位50平方公尺計算
 
         fetch('./fee_standards.json')
           .then(response => response.json())
           .then(feeData => {
             const feeStandard = feeData.find(item => item["案件類型"] === caseType);
-            if (!feeStandard) {
-              throw new Error('費用資料讀取錯誤');
-            }
+            if (!feeStandard) throw new Error('費用資料讀取錯誤');
 
             let totalFee = 0;
 
@@ -101,12 +99,12 @@ document.addEventListener('DOMContentLoaded', () => {
               totalFee += feeStandard["費用明細"]["建物測量成果圖校對費"] * buildingNumbers;
             } else if (caseType === '建物複丈') {
               totalFee += feeStandard["費用明細"]["建物合併複丈費"] * buildingNumbers;
+              totalFee += feeStandard["費用明細"]["建物合併轉繪費"] * buildingNumbers;
               totalFee += feeStandard["費用明細"]["建物分割複丈費"]["每單位面積費用"] * units;
               totalFee += feeStandard["費用明細"]["建物分割複丈費"]["建物轉繪費"] * buildingNumbers;
               totalFee += feeStandard["費用明細"]["建物部分滅失測量費"] * units;
               totalFee += feeStandard["費用明細"]["建物部分滅失轉繪費"] * buildingNumbers;
               totalFee += feeStandard["費用明細"]["建物基地號門牌號及全部滅失勘查費"] * buildingNumbers;
-              totalFee += feeStandard["費用明細"]["建物合併轉繪費"] * buildingNumbers;
             }
 
             if (hasDigitalFile === 'no') {
