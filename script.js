@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const districtSelect = document.getElementById('district');
   const sectionSelect = document.getElementById('section');
   const detailTypeSelect = document.getElementById('detail-type');
+  const buildingFields = document.getElementById('building-fields');
 
   const sectionMapping = {
     "新園段": { file: "2802_Luzhu_Xinyuan_data.json", code: 2802 },
@@ -38,10 +39,24 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => console.error('行政區資料讀取錯誤：', error));
 
   caseTypeSelect.addEventListener('change', () => {
-    const buildingFields = document.getElementById('building-fields');
-    if (["建物第一次測量", "建物複丈"].includes(caseTypeSelect.value)) {
+    detailTypeSelect.innerHTML = '';
+    if (caseTypeSelect.value === '建物第一次測量') {
+      detailTypeSelect.innerHTML = `
+        <option value="建物平面圖測量">建物平面圖測量</option>
+        <option value="建物位置圖測量">建物位置圖測量</option>
+        <option value="轉繪費">轉繪費(依282-1、282-2)</option>
+        <option value="數值化作業費">數值化作業費</option>`;
+      buildingFields.style.display = 'block';
+    } else if (caseTypeSelect.value === '建物複丈') {
+      detailTypeSelect.innerHTML = `
+        <option value="建物合併">建物合併</option>
+        <option value="建物分割">建物分割</option>
+        <option value="建物部分滅失">建物部分滅失</option>
+        <option value="建物基地門牌滅失勘查">建物基地號/門牌號及全部滅失勘查</option>
+      `;
       buildingFields.style.display = 'block';
     } else {
+      detailTypeSelect.innerHTML = '';
       buildingFields.style.display = 'none';
     }
   });
@@ -62,18 +77,21 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const mapping = sectionMapping[section];
-    if (!mapping) {
+    const sectionMapping = section === "新園段" ? {file: "2802_Luzhu_Xinyuan_data.json", code: 2802} :
+                          section === "中華段" ? {file: "2833_Luzhu_Zhonghua_data.json", code: 2833} : null;
+
+    if (!sectionMapping) {
       document.getElementById('result-text').innerHTML = "目前僅支援新園段與中華段查詢。";
       document.getElementById('result').style.display = "block";
       return;
     }
 
-    fetch(`./${mapping.file}`)
+    fetch(`./${sectionMapping.file}`)
       .then(response => response.json())
       .then(data => {
         const landData = data.find(item => 
-  Number(item.地段) === mapping.code && item.地號 === landNumber);
+          item.地段.toString() === sectionMapping.code.toString() && item.地號 === landNumber);
+
         if (!landData) {
           document.getElementById('result-text').innerHTML = "未找到該地號的資料";
           document.getElementById('result').style.display = "block";
@@ -81,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const area = Number(landData.登記面積 || landData.面積);
-        const units = Math.ceil(area / 50); // 每單位50平方公尺計算
+        const units = Math.ceil(area / 50);
 
         fetch('./fee_standards.json')
           .then(response => response.json())
@@ -90,23 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!feeStandard) throw new Error('費用資料讀取錯誤');
 
             let totalFee = 0;
-
             if (caseType === '建物第一次測量') {
-              totalFee = feeStandard.費用明細.建物平面圖測量費.單價 * units +
-                        feeStandard.費用明細.建物測量轉繪費 * buildingNumbers +
-                        feeStandard["費用明細"]["位置圖測量費"] +
-                        feeStandard["費用明細"]["建物位置圖轉繪費"] * buildingNumbers +
-                        feeStandard["費用明細"]["建物平面圖轉繪費"] * buildingNumbers +
-                        feeStandard["費用明細"]["建物測量成果圖校對費"] * buildingNumbers;
-
-            if (hasDigitalFile === 'no')
-              totalFee += feeStandard["費用明細"]["數值化作業費"] * buildingNumbers;
-
+              totalFee += feeStandard.費用明細.建物平面圖測量費.單價 * units;
+              totalFee += feeStandard.費用明細.建物測量轉繪費 * buildingNumbers;
+              totalFee += feeStandard.費用明細.位置圖測量費;
+              totalFee += feeStandard.費用明細.建物位置圖轉繪費 * buildingNumbers;
+              totalFee += feeStandard.費用明細.建物平面圖轉繪費 * buildingNumbers;
+              totalFee += feeStandard.費用明細.建物測量成果圖校對費 * buildingNumbers;
+              if(hasDigitalFile === 'no')
+                totalFee += feeStandard.費用明細.數值化作業費 * buildingNumbers;
+            }
+            //其他案件邏輯自行補齊
             document.getElementById('result-text').innerHTML = `總費用：${totalFee}元`;
-            document.getElementById('result').style.display = "block";
-          })
-          .catch(error => {
-            document.getElementById('result-text').innerHTML = error.message;
             document.getElementById('result').style.display = "block";
           });
       })
