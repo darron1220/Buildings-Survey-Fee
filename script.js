@@ -35,22 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
   // 案件類型選單切換
-  caseTypeSelect.addEventListener('change', () => {
+   caseTypeSelect.addEventListener('change', () => {
     detailTypeSelect.innerHTML = '<option value="">請選擇詳細項目</option>';
+    dynamicInputs.innerHTML = '';
+
     if (caseTypeSelect.value === '建物第一次測量') {
       detailTypeSelect.innerHTML += `
-        <optgroup label="依地籍測量實施規則第二百八十二條辦理">
-          <option value="建物位置圖測量費">建物位置圖測量費</option>
-          <option value="建物平面圖測量費">建物平面圖測量費</option>
-        </optgroup>
-        <optgroup label="依地籍測量實施規則第二百八十二條之一辦理">
-          <option value="建物位置圖轉繪費">建物位置圖轉繪費</option>
-          <option value="建物平面圖轉繪費">建物平面圖轉繪費</option>
-        </optgroup>
-        <optgroup label="依地籍測量實施規則第二百八十二條之二辦理">
-          <option value="建物測量成果圖核對費">建物測量成果圖核對費</option>
-          <option value="建物平面圖及位置圖數值化作業費">建物平面圖及位置圖數值化作業費</option>
-        </optgroup>`;
+        <option value="282">依地籍測量實施規則第二百八十二條辦理</option>
+        <option value="282-1">依地籍測量實施規則第二百八十二條之一辦理</option>
+        <option value="282-2">依地籍測量實施規則第二百八十二條之二辦理</option>`;
       detailField.style.display = 'block';
     } else if (caseTypeSelect.value === '建物複丈') {
       detailTypeSelect.innerHTML += `
@@ -60,6 +53,30 @@ document.addEventListener('DOMContentLoaded', () => {
       detailField.style.display = 'block';
     } else {
       detailField.style.display = 'none';
+    }
+  });
+
+  // 詳細項目選單切換（新增動態輸入框）
+  detailTypeSelect.addEventListener('change', () => {
+    dynamicInputs.innerHTML = '';
+    if (detailTypeSelect.value === '282') {
+      dynamicInputs.innerHTML = `
+        <label>建物位置圖測繪 (單位數量)：</label>
+        <input type="number" id="pos-map-count" min="0" required>
+        <label>建物平面圖測繪 (單位數量)：</label>
+        <input type="number" id="floor-map-count" min="0" required>`;
+    } else if (detailTypeSelect.value === '282-1') {
+      dynamicInputs.innerHTML = `
+        <label>建物位置圖轉繪 (單位數量)：</label>
+        <input type="number" id="pos-transfer-count" min="0" required>
+        <label>建物平面圖轉繪 (單位數量)：</label>
+        <input type="number" id="plan-transfer-count" min="0" required>`;
+    } else if (detailTypeSelect.value === '282-2') {
+      dynamicInputs.innerHTML = `
+        <label>建物測量成果圖核對 (單位數量)：</label>
+        <input type="number" id="check-count" min="0" required>
+        <label>建物平面圖及位置圖數值化作業 (單位數量)：</label>
+        <input type="number" id="digitize-count" min="0" required>`;
     }
   });
 
