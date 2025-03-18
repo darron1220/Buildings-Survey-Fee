@@ -5,20 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const caseTypeSelect = document.getElementById('case-type');
   const detailTypeSelect = document.getElementById('detail-type');
   const detailField = document.getElementById('detail-field');
+  const dynamicInputs = document.getElementById('dynamic-inputs');
 
   fetch('./district_data.json')
     .then(response => response.json())
     .then(data => {
-      // 初始化行政區選項
       for (const district in data) {
         districtSelect.add(new Option(district, district));
       }
 
-      // 選擇行政區後的動作
       districtSelect.addEventListener('change', () => {
         sectionSelect.innerHTML = '<option value="">請選擇地段</option>';
         const selectedDistrict = districtSelect.value;
-
         if (selectedDistrict && data[selectedDistrict]) {
           data[selectedDistrict].forEach(section => {
             sectionSelect.add(new Option(section, section));
@@ -34,23 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('行政區資料讀取錯誤，請確認district_data.json位置是否正確。');
     });
 
-  // 案件類型選單切換
+  // 完整的案件類型選單切換邏輯（更新後）
   caseTypeSelect.addEventListener('change', () => {
     detailTypeSelect.innerHTML = '<option value="">請選擇詳細項目</option>';
+    dynamicInputs.innerHTML = '';
     if (caseTypeSelect.value === '建物第一次測量') {
       detailTypeSelect.innerHTML += `
-        <optgroup label="依地籍測量實施規則第二百八十二條辦理">
-          <option value="建物位置圖測量費">建物位置圖測量費</option>
-          <option value="建物平面圖測量費">建物平面圖測量費</option>
-        </optgroup>
-        <optgroup label="依地籍測量實施規則第二百八十二條之一辦理">
-          <option value="建物位置圖轉繪費">建物位置圖轉繪費</option>
-          <option value="建物平面圖轉繪費">建物平面圖轉繪費</option>
-        </optgroup>
-        <optgroup label="依地籍測量實施規則第二百八十二條之二辦理">
-          <option value="建物測量成果圖核對費">建物測量成果圖核對費</option>
-          <option value="建物平面圖及位置圖數值化作業費">建物平面圖及位置圖數值化作業費</option>
-        </optgroup>`;
+        <option value="282">依地籍測量實施規則第二百八十二條辦理</option>
+        <option value="282-1">依地籍測量實施規則第二百八十二條之一辦理</option>
+        <option value="282-2">依地籍測量實施規則第二百八十二條之二辦理</option>`;
       detailField.style.display = 'block';
     } else if (caseTypeSelect.value === '建物複丈') {
       detailTypeSelect.innerHTML += `
@@ -63,7 +53,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 表單提交處理
+  // 詳細項目選單切換（動態輸入框產生）
+  detailTypeSelect.addEventListener('change', () => {
+    dynamicInputs.innerHTML = '';
+    if (detailTypeSelect.value === '282') {
+      dynamicInputs.innerHTML = `
+        <label>建物位置圖測繪 (單位數量)：</label>
+        <input type="number" id="pos-map-count" min="0" required>
+        <label>建物平面圖測繪 (單位數量)：</label>
+        <input type="number" id="floor-map-count" min="0" required>`;
+    } else if (detailTypeSelect.value === '282-1') {
+      dynamicInputs.innerHTML = `
+        <label>建物位置圖轉繪 (單位數量)：</label>
+        <input type="number" id="pos-transfer-count" min="0" required>
+        <label>建物平面圖轉繪 (單位數量)：</label>
+        <input type="number" id="plan-transfer-count" min="0" required>`;
+    } else if (detailTypeSelect.value === '282-2') {
+      dynamicInputs.innerHTML = `
+        <label>建物測量成果圖核對 (單位數量)：</label>
+        <input type="number" id="check-count" min="0" required>
+        <label>建物平面圖及位置圖數值化作業 (單位數量)：</label>
+        <input type="number" id="digitize-count" min="0" required>`;
+    }
+  });
+
+  // 表單提交處理（維持原本邏輯不動）
   document.getElementById('land-form').addEventListener('submit', (e) => {
     e.preventDefault();
     const landNumber = landNumberInput.value.trim();
@@ -82,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const needInvestigation = document.getElementById('need-investigation').value === 'yes';
     const needLossInvestigation = document.getElementById('need-loss-investigation').value === 'yes';
 
-    // 找到對應的JSON檔案
     let jsonFile = '';
     if (section === "新園段") jsonFile = './2802_Luzhu_Xinyuan_data.json';
     else if (section === "中華段") jsonFile = './2833_Luzhu_Zhonghua_data.json';
@@ -111,10 +124,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let totalFee = 0;
 
             if (caseType === '建物第一次測量') {
-              if (detailType === "建物位置圖測量費") totalFee += feeStandard.位置圖測量費;
-              if (detailType === "建物平面圖測量費") totalFee += feeStandard.建物平面圖測量費 * units;
-              if (["建物位置圖轉繪費", "建物平面圖轉繪費", "建物測量成果圖核對費", "數值化作業費"].includes(detailType)) {
-                totalFee += feeStandard[detailType] * buildingNumbers;
+              if (detailTypeSelect.value === "282") {
+                totalFee += feeStandard.位置圖測量費 * Number(document.getElementById('pos-map-count').value);
+                totalFee += feeStandard.建物平面圖測量費 * Number(document.getElementById('floor-map-count').value);
+              } else if (detailTypeSelect.value === "282-1") {
+                totalFee += feeStandard.建物位置圖轉繪費 * Number(document.getElementById('pos-transfer-count').value);
+                totalFee += feeStandard.建物平面圖轉繪費 * Number(document.getElementById('plan-transfer-count').value);
+              } else if (detailTypeSelect.value === "282-2") {
+                totalFee += feeStandard.建物測量成果圖校對費 * Number(document.getElementById('check-count').value);
+                totalFee += feeStandard.數值化作業費 * Number(document.getElementById('digitize-count').value);
               }
             } else if (caseType === '建物複丈') {
               totalFee += feeStandard["建物合併複丈費"] * buildingNumbers;
@@ -129,13 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('result-text').textContent = `總費用為：${totalFee}元`;
             document.getElementById('result').style.display = 'block';
           })
-          .catch(err => {
-            console.error(err);
-            alert('費用資料讀取錯誤！');
-          });
+          .catch(err => alert('費用資料讀取錯誤！'));
       })
       .catch(err => {
-        console.error(err);
         alert('地段資料讀取錯誤！');
       });
   });
