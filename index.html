@@ -8,7 +8,6 @@
 </head>
 <body>
   <div class="container">
-    <h2>建物測量規費試算</h2>
     <form id="land-form">
       <div>
         <label for="district">行政區：</label>
@@ -26,7 +25,7 @@
 
       <div>
         <label for="land-number">地號：</label>
-        <input type="text" id="land-number" placeholder="地號為8碼，如264-3為02640003" maxlength="8" required>
+        <input type="text" id="land-number" placeholder="地號為8碼，如264-3為02640003" required>
       </div>
 
       <div>
@@ -46,35 +45,6 @@
       </div>
 
       <div id="dynamic-inputs"></div>
-
-      <div>
-        <label for="building-numbers">建號數：</label>
-        <input type="number" id="building-numbers" placeholder="請輸入建號數" min="1" required>
-      </div>
-
-      <div>
-        <label for="has-digital-file">是否已檢附電子檔：</label>
-        <select id="has-digital-file">
-          <option value="yes">是</option>
-          <option value="no">否</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="need-investigation">是否需要基地號或門牌號勘查：</label>
-        <select id="need-investigation">
-          <option value="no">否</option>
-          <option value="yes">是</option>
-        </select>
-      </div>
-
-      <div>
-        <label for="need-loss-investigation">是否需要建物或特別建物各棟次之全部滅失勘查：</label>
-        <select id="need-loss-investigation">
-          <option value="no">否</option>
-          <option value="yes">是</option>
-        </select>
-      </div>
 
       <button type="submit">計算費用</button>
     </form>
