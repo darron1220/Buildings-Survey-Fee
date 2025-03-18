@@ -27,9 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
           sectionSelect.disabled = true;
         }
       });
-    })
-    .catch(error => {
-      alert('行政區資料讀取錯誤，請確認district_data.json位置是否正確。');
     });
 
   caseTypeSelect.addEventListener('change', () => {
@@ -95,12 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const landNumber = landNumberInput.value.trim();
     if (!/^\d{8}$/.test(landNumber)) {
-      alert('地號為8碼，如264-3為02640003');
+      alert('地號需為8位數字格式，例如02440000');
       return;
     }
 
-    const district = districtSelect.value;
-    const section = sectionSelect.value;
     const caseType = caseTypeSelect.value;
     const detailType = detailTypeSelect.value;
 
@@ -122,24 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
       } else if (caseType === '建物複丈') {
         const buildingNumbers = Number(document.getElementById('building-numbers').value);
         const feeType = document.getElementById('fee-type')?.value;
-        switch(detailType){
-          case "建物合併":
-            totalFee += (feeType === '複丈費' ? 400 : 400) * buildingNumbers;
-            break;
-          case "建物分割":
-            totalFee += (feeType === '複丈費' ? 1000 : 800) * buildingNumbers;
-            break;
-          case "建物部分滅失":
-            totalFee += (feeType === '複丈費' ? 1000 : 800) * buildingNumbers;
-            break;
-          default:
-            totalFee += 500 * buildingNumbers;
-            break;
-        }
+        const feeMap = {
+          "建物合併": 400,
+          "建物分割": feeType === '複丈費' ? 1000 : 800,
+          "建物部分滅失": feeType === '複丈費' ? 1000 : 800,
+          "建物基地號或建物門牌號勘查": 500,
+          "建物或特別建物各棟次之全部滅失勘查": 500
+        };
+        totalFee += feeMap[detailType] * buildingNumbers;
       }
 
       resultText.textContent = `總費用為：${totalFee}元`;
       document.getElementById('result').style.display = 'block';
-    }).catch(err => alert('費用資料讀取錯誤！'));
+    });
   });
 });
