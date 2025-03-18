@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const district = districtSelect.value;
+    const section = sectionSelect.value;
     const caseType = caseTypeSelect.value;
     const detailType = detailTypeSelect.value;
 
@@ -122,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const feeType = document.getElementById('fee-type')?.value;
         switch(detailType){
           case "建物合併":
-            totalFee += 400 * buildingNumbers;
+            totalFee += (feeType === '複丈費' ? 400 : 400) * buildingNumbers;
             break;
           case "建物分割":
             totalFee += (feeType === '複丈費' ? 1000 : 800) * buildingNumbers;
@@ -135,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             break;
         }
       }
+
       resultText.textContent = `總費用為：${totalFee}元`;
       document.getElementById('result').style.display = 'block';
     }).catch(err => alert('費用資料讀取錯誤！'));
